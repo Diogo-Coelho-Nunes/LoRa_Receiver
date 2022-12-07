@@ -43,16 +43,16 @@
     <sup>&#37;</sup>
   </p>
   <p>
-    <i class="fas fa-angle-double-down" style="color:#e8c14d;"></i> Pressure: <span id="pressure" class="readings">%PRESSURE%</span>
-    <sup>hpa</sup>
+    <i class="fas fa-tint" style="color:#e8c14d;"></i> Soil Moisture: <span id="pressure" class="readings">%SOIL%</span>
+    <sup>anlg</sup>
   </p>
 </main>
 <script>
-setInterval(updateValues, 10000, "temperature");
-setInterval(updateValues, 10000, "humidity");
-setInterval(updateValues, 10000, "pressure");
-setInterval(updateValues, 10000, "rssi");
-setInterval(updateValues, 10000, "timestamp");
+setInterval(updateValues, 3000, "temperature");
+setInterval(updateValues, 3000, "humidity");
+setInterval(updateValues, 3000, "pressure");
+setInterval(updateValues, 3000, "rssi");
+setInterval(updateValues, 3000, "timestamp");
 
 function updateValues(value) {
   var xhttp = new XMLHttpRequest();

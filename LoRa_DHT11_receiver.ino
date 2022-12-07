@@ -1,3 +1,5 @@
+#include <SPIFFS.h>
+
 //Libraries for LoRa
 #include <SPI.h>
 #include <LoRa.h>
@@ -40,8 +42,8 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RST);
 const char* ssid     = "Nunes_hotspot";
 const char* password = "nunescoelho";
 
-WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP);
+//WiFiUDP ntpUDP;
+//NTPClient timeClient(ntpUDP);
 
 String LoRaData;
 
@@ -52,6 +54,7 @@ String timestamp;
 String temperature;
 String humidity;
 String pressure;
+String Soil;
 String readingID;
 
 
@@ -68,7 +71,7 @@ String processor(const String& var){
     return humidity;
   }
   else if(var == "PRESSURE"){
-    return pressure;
+    return Soil;
   }
   else if(var == "TIMESTAMP"){
     return timestamp;
@@ -98,6 +101,51 @@ void connectWiFi(){
   display.display();
 }
 
+void getLoRaData() {
+  Serial.print("Lora packet received: ");
+  // Read packet
+  while (LoRa.available()) {
+    String LoRaData = LoRa.readString();
+    // LoRaData format: readingID/temperature&soilMoisture#batterylevel
+    // String example: 1/27.43&654#95.34
+    Serial.print(LoRaData); 
+    
+    // Get readingID, temperature and soil moisture
+    int pos1 = LoRaData.indexOf('/');
+    int pos2 = LoRaData.indexOf('&');
+    int pos3 = LoRaData.indexOf('#');
+    temperature = LoRaData.substring(0, pos1);
+    humidity = LoRaData.substring(pos1 +1, pos2);
+    Soil = LoRaData.substring(pos2+1, pos3);
+
+   while (LoRa.available()) {
+      LoRaData = LoRa.readString();
+      Serial.print(LoRaData);
+    }
+
+    //print RSSI of packet
+    int rssi = LoRa.packetRssi();
+    Serial.print(" with RSSI ");    
+    Serial.println(rssi);
+
+    display.clearDisplay();
+    display.setCursor(0,0);
+    display.print("LORA RECEIVER");
+    display.setCursor(0,20);
+    display.print("Temperature:");
+    display.print(temperature);
+    display.setCursor(0,30);
+    display.print("AirHumidity:");
+    display.print(humidity);
+    display.setCursor(0,40);
+    display.print("SoilMoisture:");
+    display.print(Soil);
+    
+    display.display();
+    }
+  
+}
+
 void setup() { 
   //initialize Serial Monitor
   Serial.begin(115200);
@@ -119,7 +167,7 @@ void setup() {
    }
  
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "data/index.html", String(), false, processor);
+    request->send(SPIFFS, "/index.html", String(), false, processor);
   });
  
   display.clearDisplay();
@@ -142,46 +190,20 @@ void setup() {
   display.setCursor(0,10);
   display.println("LoRa Initializing OK!");
   display.display();
-
-  server.begin();
+  
   connectWiFi();
+  server.begin();
+  
 }
 
-void loop() {
-  String Temp = LoRaData.substring(0,5);
-  String Hum = LoRaData.substring(5,10);
-  String Soil = LoRaData.substring(10,15);
-  
+void loop() {  
 //try to parse packet
   int packetSize = LoRa.parsePacket();
   if (packetSize) {
     //received a packet
     Serial.print("Received packet ");
+    getLoRaData();
 
     //read packet
-    while (LoRa.available()) {
-      LoRaData = LoRa.readString();
-      Serial.print(LoRaData);
-    }
-
-    //print RSSI of packet
-    int rssi = LoRa.packetRssi();
-    Serial.print(" with RSSI ");    
-    Serial.println(rssi);
-
-    display.clearDisplay();
-    display.setCursor(0,0);
-    display.print("LORA RECEIVER");
-    display.setCursor(0,20);
-    display.print("Temperature:");
-    display.print(Temp);
-    display.setCursor(0,30);
-    display.print("AirHumidity:");
-    display.print(Hum);
-    display.setCursor(0,40);
-    display.print("SoilMoisture:");
-    display.print(Soil);
-    
-    display.display();
-    }
+  }
 }
