@@ -43,14 +43,14 @@
     <sup>&#37;</sup>
   </p>
   <p>
-    <i class="fas fa-tint" style="color:#e8c14d;"></i> Soil Moisture: <span id="pressure" class="readings">%SOIL%</span>
-    <sup>anlg</sup>
+    <i class="fas fa-tint" style="color:#e8c14d;"></i> Soil Moisture: <span id="soil" class="readings">%SOIL%</span>
+    <sup>&#37;</sup>
   </p>
 </main>
 <script>
 setInterval(updateValues, 3000, "temperature");
 setInterval(updateValues, 3000, "humidity");
-setInterval(updateValues, 3000, "pressure");
+setInterval(updateValues, 3000, "soil");
 setInterval(updateValues, 3000, "rssi");
 setInterval(updateValues, 3000, "timestamp");
 
