@@ -169,6 +169,22 @@ void setup() {
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/index.html", String(), false, processor);
   });
+  server.on("/temperature", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", temperature.c_str());
+  });
+  server.on("/humidity", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", humidity.c_str());
+  });
+  server.on("/soil", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", Soil.c_str());
+  });
+  server.on("/timestamp", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send_P(200, "text/plain", timestamp.c_str());
+  });
+ 
+  server.on("/winter", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/winter.jpg", "image/jpg");
+  }); 
  
   display.clearDisplay();
   display.setTextColor(WHITE);
