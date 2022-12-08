@@ -79,6 +79,25 @@ String processor(const String& var){
   return String();
 }
 
+//Arranjar isto
+String contaTemp(string Temp)
+{
+  time_t start, ending;
+  String diferenca;
+
+  if(Temp > 22)
+  {
+    time(&start);
+  }
+  else
+  {
+    time(&ending);
+    return difftime(ending, start); 
+  }
+  return 0;
+
+}
+
 //Wifi Connection function
 void connectWiFi(){
   // Connect to Wi-Fi network with SSID and password

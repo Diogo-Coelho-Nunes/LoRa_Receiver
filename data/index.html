@@ -77,18 +77,34 @@ var chartH = new Highcharts.Chart({
     data: []
   }],
   plotOptions: {
-    line: { animation: false,
-      dataLabels: { enabled: true }
+    line: {
+      animation: true,
+      dataLabels: {
+        enabled: true
+      }
     }
   },
   xAxis: {
     type: 'datetime',
-    dateTimeLabelFormats: { second: '%H:%M:%S' }
+    dateTimeLabelFormats: { 
+      hour: '%H'
+    },
+    scrollbars: { 
+      enabled: true
+    }
+
   },
   yAxis: {
-    title: { text: 'Humidity (%)' }
+    title: { 
+      text: 'Humidity'
+    },
+    scrollbars: {
+      enabled: true
+    }
   },
-  credits: { enabled: false }
+  credits: {
+    enabled: false
+  }
 });
 
 setInterval(function () {
@@ -98,7 +114,7 @@ setInterval(function () {
       var x = (new Date()).getTime(),
           y = parseFloat(this.responseText);
       //console.log(this.responseText);
-      if(chartH.series[0].data.length > 40) {
+      if(chartH.series[0].data.length > 48) {
         chartH.series[0].addPoint([x, y], true, true, true);
       } else {
         chartH.series[0].addPoint([x, y], true, false, true);
@@ -107,7 +123,7 @@ setInterval(function () {
   };
   xhttp.open("GET", "/soil", true);
   xhttp.send();
-}, 2000 ) ;
+}, 2000 ) ;//1800000 = 30 minutes
 </script>
 </body>
 </html>
