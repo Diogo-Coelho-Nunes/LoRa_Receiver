@@ -26,6 +26,8 @@
     p { font-size: 1.2rem; }
     .units { font-size: 1.2rem; }
     .readings { font-size: 2.0rem; }
+    
+  
   </style>
 </head>
 <body>
@@ -43,11 +45,10 @@
     <i class="fas fa-tint" style="color:#00add6;"></i> Humidity: <span id="humidity" class="readings">%HUMIDITY%</span>
     <sup>&#37;</sup>
   </p>
-  <p>
-    <i class="fas fa-seedling" style="color:#00a911;"></i> Soil Moisture: <span id="soil" class="readings">%SOIL%</span>
-  </p>
   <div id="chart-humidity" class="container"></div>
 </main>
+</body>
+
 
 
 <script>
@@ -70,7 +71,7 @@ function updateValues(value) {
 
 var chartH = new Highcharts.Chart({
   chart:{ renderTo:'chart-humidity' },
-  title: { text: 'BME280 Humidity' },
+  title: { text: 'Soil Moisture' },
   series: [{
     showInLegend: false,
     data: []
@@ -90,7 +91,7 @@ var chartH = new Highcharts.Chart({
   credits: { enabled: false }
 });
 
-setInterval(function ( ) {
+setInterval(function () {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -106,7 +107,7 @@ setInterval(function ( ) {
   };
   xhttp.open("GET", "/soil", true);
   xhttp.send();
-}, 30000 ) ;
+}, 2000 ) ;
 </script>
 </body>
 </html>
