@@ -1,3 +1,8 @@
+#include <sstream> // this will allow you to use stringstream in your program
+#include <iostream>   // std::cout
+#include <string>     // std::string, std::stoi
+using namespace std;
+
 #include <SPIFFS.h>
 
 //Libraries for LoRa
@@ -56,6 +61,8 @@ String humidity;
 String pressure;
 String Soil;
 String readingID;
+int contador = 0;
+int horas = 0;
 
 
 //Server connection on port 80
@@ -77,25 +84,6 @@ String processor(const String& var){
     return timestamp;
   }
   return String();
-}
-
-//Arranjar isto
-String contaTemp(string Temp)
-{
-  time_t start, ending;
-  String diferenca;
-
-  if(Temp > 22)
-  {
-    time(&start);
-  }
-  else
-  {
-    time(&ending);
-    return difftime(ending, start); 
-  }
-  return 0;
-
 }
 
 //Wifi Connection function
@@ -139,9 +127,25 @@ void getLoRaData() {
 
    while (LoRa.available()) {
       LoRaData = LoRa.readString();
-      Serial.print(LoRaData);
+      Serial.println(LoRaData);
     }
-
+    
+    int obj = 2160000;
+   
+    int num = temperature.toInt();
+    Serial.println(num);
+    Serial.println(temperature);
+    Serial.println(humidity);
+    
+   if(num > 24 && contador < obj){ //mudar temp futuramente
+      contador+=1;
+      delay(1000);
+      Serial.println(contador);
+    }
+    else
+      Serial.println(contador);
+   horas = contador/60; //passar para 3600
+   Serial.println(horas);
     //print RSSI of packet
     int rssi = LoRa.packetRssi();
     Serial.print(" with RSSI ");    
@@ -159,10 +163,12 @@ void getLoRaData() {
     display.setCursor(0,40);
     display.print("SoilMoisture:");
     display.print(Soil);
+    display.setCursor(0,50);
+    display.print("Horas acumuladas:");
+    display.print(horas);
     
     display.display();
-    }
-  
+    }  
 }
 
 void setup() { 
@@ -238,7 +244,5 @@ void loop() {
     //received a packet
     Serial.print("Received packet ");
     getLoRaData();
-
-    //read packet
   }
 }
