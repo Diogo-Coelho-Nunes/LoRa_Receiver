@@ -2,7 +2,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="data:,">
-  <title>ESP32 (LoRa + Server)</title>
+  <title>Weather Station</title>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
   <script src="https://code.highcharts.com/highcharts.js"></script>
   <style>
@@ -10,14 +10,14 @@
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
       text-align: center;
+      background-image: url(winter);
+      background-size: cover;
     }
     header {
       margin: 0;
       padding-top: 5vh;
       padding-bottom: 5vh;
       overflow: hidden;
-      background-image: url(winter);
-      background-size: cover;
       color: white;
     }
     h2 {
@@ -32,17 +32,15 @@
 </head>
 <body>
   <header>
-    <h2>ESP32 (LoRa + Server)</h2>
-    <p><strong>Last received packet:<br/><span id="timestamp">%TIMESTAMP%</span></strong></p>
-    <p>LoRa RSSI: <span id="rssi">%RSSI%</span></p>
+    <h2>Weather Station - SE 2022/2023</h2>
   </header>
 <main>
   <p>
-    <i class="fas fa-thermometer-half" style="color:#059e8a;"></i> Temperature: <span id="temperature" class="readings">%TEMPERATURE%</span>
+    <i class="fas fa-thermometer-half" style="color:#001254;"></i> Temperature: <span id="temperature" class="readings">%TEMPERATURE%</span>
     <sup>&deg;C</sup>
   </p>
   <p>
-    <i class="fas fa-tint" style="color:#00add6;"></i> Humidity: <span id="humidity" class="readings">%HUMIDITY%</span>
+    <i class="fas fa-tint" style="color:#001254;"></i> Humidity: <span id="humidity" class="readings">%HUMIDITY%</span>
     <sup>&#37;</sup>
   </p>
   <div id="chart-humidity" class="container"></div>
@@ -70,8 +68,16 @@ function updateValues(value) {
 }
 
 var chartH = new Highcharts.Chart({
-  chart:{ renderTo:'chart-humidity' },
-  title: { text: 'Soil Moisture' },
+  chart:{ renderTo:'chart-humidity',
+          backgroundColor: null,
+          type: 'line'
+        },
+  title: { text: 'Soil Moisture',
+  style: {
+        color: 'black',
+        fontSize: '1.2rem'
+      }
+  },
   series: [{
     showInLegend: false,
     data: []
@@ -82,7 +88,10 @@ var chartH = new Highcharts.Chart({
       dataLabels: {
         enabled: true
       }
-    }
+    },
+    series: {
+            color: '#FFFFFF'
+        }
   },
   xAxis: {
     type: 'datetime',
@@ -96,12 +105,27 @@ var chartH = new Highcharts.Chart({
   },
   yAxis: {
     title: { 
-      text: 'Humidity'
+      text: 'Humidity',
+      style: {
+        color: 'black',
+        fontSize: '1.2rem'
+      }
     },
     scrollbars: {
       enabled: true
-    }
+    },
+    lineColor: '#FFFFFF',
+    lineWidth: 1
   },
+  legend: {
+            layout: 'Values',
+            backgroundColor: '#FFFFFF',
+            floating: true,
+            align: 'left',
+            x: 100,
+            verticalAlign: 'top',
+            y: 70
+        },
   credits: {
     enabled: false
   }
